@@ -1,5 +1,7 @@
 import 'babel-polyfill';
 import express from 'express';
+import { matchRoutes } from 'react-router-config';
+import Routes from './client/Routes'
 import renderer from './helpers/renderer';
 import createStore from './helpers/createStore';
 const app = express();
@@ -13,7 +15,29 @@ app.get('*', (req, res) => {
   // some logic to initialize store
   // then load data into store
   // then we pass the store inside rendere after data load and initialization
-  res.send(renderer(req, store));
+
+  const promises = matchRoutes(Routes, req.path).map(({route}) => {
+    return route.loadData ? route.loadData(store) : null;
+  });
+
+
+
+  // return an array of component thats about to be rendered in the app. Only renders the right ones.
+  // For each component we will define a function that loads data into each respective component since we cannot use lifecycle methods on the server
+  // all this is so we dont have to render outr app in order tos fire off data loading functions
+
+// when we call load data, we pass in the redux store
+// dispatch an action creator and pass action to redux store manually
+// return a promise that represent then network request
+// wait for promise to resolve.
+// render app to string.
+
+ Promise.all(promises).then(() => {
+   res.send(renderer(req, store));
+ })
+  // array of promises passed to Promise.all
+  // returns one promise which resolves when all others are done
+
 })
 
 app.listen(3001, () => {

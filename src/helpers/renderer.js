@@ -2,6 +2,7 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { renderRoutes } from 'react-router-config';
 import Routes from '../client/Routes';
 
 // context here is used to handle redirects and error handling.
@@ -14,11 +15,14 @@ import Routes from '../client/Routes';
 // We create the store inside of index.js file
 // We execute logic and then pass it into the provider once data load is complete
 
+//
+
 export default (req, store) => {
   const content = renderToString(
     <Provider store={store}>
       <StaticRouter location={req.url} context={{}}>
-        <Routes />
+        <div>{renderRoutes(Routes)}</div>
+        {/* <Routes /> */}
       </StaticRouter>
     </Provider>
   );
