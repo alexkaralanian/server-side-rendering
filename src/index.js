@@ -8,10 +8,9 @@ const app = express();
 
 app.use(express.static('public'));
 
-
-// we pass request object as an argument to static router defined in our renderer file.
 app.get('*', (req, res) => {
   const store = createStore();
+
   // some logic to initialize store
   // then load data into store
   // then we pass the store inside rendere after data load and initialization
@@ -20,11 +19,9 @@ app.get('*', (req, res) => {
     return route.loadData ? route.loadData(store) : null;
   });
 
-
-
-  // return an array of component thats about to be rendered in the app. Only renders the right ones.
+  // matchRoutes returns an array of component thats about to be rendered in the app.
   // For each component we will define a function that loads data into each respective component since we cannot use lifecycle methods on the server
-  // all this is so we dont have to render outr app in order tos fire off data loading functions
+  // all this is so we dont have to render our app in order to fire off data loading functions
 
 // when we call load data, we pass in the redux store
 // dispatch an action creator and pass action to redux store manually
@@ -33,6 +30,7 @@ app.get('*', (req, res) => {
 // render app to string.
 
  Promise.all(promises).then(() => {
+  // we pass request object and store as arguments to static router defined in our renderer file.
    res.send(renderer(req, store));
  })
   // array of promises passed to Promise.all

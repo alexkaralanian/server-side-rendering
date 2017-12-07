@@ -2,7 +2,7 @@ import React from 'react';
 import Home from './components/Home';
 import UsersList, { loadData } from './components/UsersList'
 
-// This new syntax / array of objects allows us to use react-router-config
+// This new syntax / array of objects allows us to use react-router-config and access the loadData function on server.
 export default [
   {
     path: '/',
