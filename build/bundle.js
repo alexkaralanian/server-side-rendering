@@ -100,7 +100,7 @@ var _UsersList2 = _interopRequireDefault(_UsersList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// This new syntax / array of objects allows us to use react-router-config
+// This new syntax / array of objects allows us to use react-router-config and access the loadData function on server.
 exports.default = [{
   path: '/',
   component: _Home2.default,
@@ -222,9 +222,9 @@ var app = (0, _express2.default)();
 
 app.use(_express2.default.static('public'));
 
-// we pass request object as an argument to static router defined in our renderer file.
 app.get('*', function (req, res) {
   var store = (0, _createStore2.default)();
+
   // some logic to initialize store
   // then load data into store
   // then we pass the store inside rendere after data load and initialization
@@ -235,9 +235,9 @@ app.get('*', function (req, res) {
     return route.loadData ? route.loadData(store) : null;
   });
 
-  // return an array of component thats about to be rendered in the app. Only renders the right ones.
+  // matchRoutes returns an array of component thats about to be rendered in the app.
   // For each component we will define a function that loads data into each respective component since we cannot use lifecycle methods on the server
-  // all this is so we dont have to render outr app in order tos fire off data loading functions
+  // all this is so we dont have to render our app in order to fire off data loading functions
 
   // when we call load data, we pass in the redux store
   // dispatch an action creator and pass action to redux store manually
@@ -246,6 +246,7 @@ app.get('*', function (req, res) {
   // render app to string.
 
   Promise.all(promises).then(function () {
+    // we pass request object and store as arguments to static router defined in our renderer file.
     res.send((0, _renderer2.default)(req, store));
   });
   // array of promises passed to Promise.all
@@ -429,16 +430,15 @@ var _Routes2 = _interopRequireDefault(_Routes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // context here is used to handle redirects and error handling.
-// static router is used specifically for SSR on server since node doesnt have a url bar / browser.
-// Static router needs to be told exactly what path it needs to consider. We need to communicate path user is trying to access to the statc router so it knows what to render.
-// This path is contained in the original request okect that exress passed to our route handler
-// We receive the request object and use req.path to identify the route requested.
 // context is just an empty object
+
+// static router is used specifically for SSR on server since node doesnt have a url bar / browser.
+// We need to communicate path user is trying to access to the statc router so it knows what to render.
+// This path is contained in the original request object that express passed to our route handler
+// We receive the request object and use req.path to identify the route requested.
 
 // We create the store inside of index.js file
 // We execute logic and then pass it into the provider once data load is complete
-
-//
 
 exports.default = function (req, store) {
   var content = (0, _server.renderToString)(_react2.default.createElement(

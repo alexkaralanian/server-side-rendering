@@ -37518,7 +37518,7 @@ var _UsersList2 = _interopRequireDefault(_UsersList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// This new syntax / array of objects allows us to use react-router-config
+// This new syntax / array of objects allows us to use react-router-config and access the loadData function on server.
 exports.default = [{
   path: '/',
   component: _Home2.default,
