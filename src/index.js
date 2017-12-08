@@ -4,6 +4,7 @@ import { matchRoutes } from 'react-router-config';
 import Routes from './client/Routes'
 import renderer from './helpers/renderer';
 import createStore from './helpers/createStore';
+
 const app = express();
 
 app.use(express.static('public'));
@@ -29,10 +30,10 @@ app.get('*', (req, res) => {
 // wait for promise to resolve.
 // render app to string.
 
- Promise.all(promises).then(() => {
+  Promise.all(promises).then(() => {
   // we pass request object and store as arguments to static router defined in our renderer file.
-   res.send(renderer(req, store));
- })
+    res.send(renderer(req, store));
+  })
   // array of promises passed to Promise.all
   // returns one promise which resolves when all others are done
 

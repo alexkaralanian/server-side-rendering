@@ -10,7 +10,9 @@ import Routes from './Routes';
 import reducers from './reducers'
 import {renderRoutes} from 'react-router-config'
 
-const store = createStore(reducers, {}, applyMiddleware(thunk))
+const store = createStore(reducers, window.INITIAL_STATE, applyMiddleware(thunk))
+
+// INITIAL STATE ships the Redux store state from the server to the client to hydrate the store state on initial render.
 
 ReactDOM.hydrate(
   <Provider store={store}>
