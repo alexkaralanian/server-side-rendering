@@ -1,18 +1,18 @@
 import React from 'react';
-import Home from './components/Home';
-import UsersList, { loadData } from './components/UsersList'
+import HomeContainer from './containers/HomeContainer';
+import UsersListContainer, { loadData } from './containers/UsersListContainer'
 
 // This new syntax / array of objects allows us to use react-router-config and access the loadData function on server.
 export default [
   {
+    ...HomeContainer,
     path: '/',
-    component: Home,
     exact: true
   },
   {
+    ...UsersListContainer,
     path: '/users',
-    component: UsersList,
-    loadData
+
   }
 ]
 

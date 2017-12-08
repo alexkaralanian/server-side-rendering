@@ -3,6 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
+import serialize from 'serialize-javascript'
 import Routes from '../client/Routes';
 
 // context here is used to handle redirects and error handling.
@@ -14,23 +15,28 @@ import Routes from '../client/Routes';
 // We receive the request object and use req.path to identify the route requested.
 
 // We create the store inside of index.js file
-// We execute logic and then pass it into the provider once data load is complete
+// We execute logic and then pass it into the provider once the data load is complete
 
 export default (req, store) => {
   const content = renderToString(
     <Provider store={store}>
-      <StaticRouter location={req.url} context={{}}>
+      <StaticRouter location={req.path} context={{}}>
         <div>{renderRoutes(Routes)}</div>
-        {/* <Routes /> */}
       </StaticRouter>
     </Provider>
   );
+
+  // serialize prevents XSS attaches.
+  // We could call JSON.stringify but that would execute any script tags embedded into the code.
 
   return `
     <html>
       <head></head>
       <body>
         <div id="root">${content}</div>
+        <script>
+          window.INITIAL_STATE = ${serialize(store.getState())}
+        </script>
         <script src="bundle.js"></script>
       </body>
     </html>
